@@ -133,7 +133,10 @@ public class MainFragment extends Fragment
                                             .show();
                                     resultAdapter.setResults(results.getResults());
                                 } else {
-                                    Toast.makeText(requireContext(), R.string.found_hint, Toast.LENGTH_LONG)
+                                    Toast.makeText(
+                                                    requireContext(),
+                                                    R.string.not_found_hint,
+                                                    Toast.LENGTH_LONG)
                                             .show();
                                 }
                             }

@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         implements EpisodesAdapter.OnItemClickListener {
-    
+
     private static final String KEY_ITEMS = "KEY_ITEMS";
     private static final String KEY_REQUEST_CODE = "KEY_REQUEST_CODE";
     public static final String TAG = "EpisodesBottomSheetFragment";
@@ -72,7 +72,7 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
 
             List<EpisodeItem> listEpisodes = new ArrayList<>();
             for (Map.Entry<Integer, String> ep : stringArrayList.entrySet()) {
-                Log.i(TAG, ep.getKey() + " " + ep.getValue());
+                // Log.i(TAG, ep.getKey() + " " + ep.getValue());
                 listEpisodes.add(new EpisodeItem(ep.getKey(), ep.getValue()));
             }
 
@@ -87,5 +87,12 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
     @Override
     public void onEpisodeItemSelected(EpisodeItem item) {
         listener.onEpisodeItemSelected(item);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        adapter = null;
     }
 }
