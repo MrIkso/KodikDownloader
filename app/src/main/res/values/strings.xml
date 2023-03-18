@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">KodikDownloader</string>
+    <string name="put_id_hint">Put your %s id</string>
+    <string name="put_name_hint">Put your title name</string>
+    <string name="search_reqest">Search</string>
+    <string name="season_hint">season %d</string>
+    <string name="episodes">Episodes</string>
+    <string name="episode_hint">Episode %d</string>
+    <string name="qality_choser_title">Select video quality</string>
+    <string name="found_hint">Found %d results</string>
+    <string name="not_found_hint">Not found</string>
+    <string name="dvget_not_found">DVGet not installed</string>
+    <string name="idm_not_found">IDM not installed</string>
+    <string-array name="methods_array">
+        <item>Title</item>
+        <item>Shikimori</item>
+        <item>Kinopoisk</item>
+        <item>IMdb</item>
+    </string-array>
+    <plurals name="episode_hint">
+        <item quantity="one">%d episode</item>
+        <item quantity="two">%d episodes</item>
+        <item quantity="few">%d episodes</item>
+        <item quantity="many">%d episodes</item>
+    </plurals>
+</resources>
