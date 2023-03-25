@@ -1,15 +1,14 @@
 package com.mrikso.kodikdownloader.viewmodel;
 
-import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.mrikso.kodikdownloader.model.SearchResultModel;
 import com.mrikso.kodikdownloader.repository.KodikRepository;
 import com.mrikso.kodikdownloader.service.KodikVideosService;
-import java.util.List;
+
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainFragmentViewModel extends ViewModel {
@@ -26,7 +25,7 @@ public class MainFragmentViewModel extends ViewModel {
     }
 
     public void startSearch(String name, int mode) {
-        Log.i(TAG, "start search + mode " + String.valueOf(mode));
+        //Log.i(TAG, "start search + mode " + String.valueOf(mode));
         switch (mode) {
             case 0: // title mode
                 kodikRepository.getSearchByTitle(name);

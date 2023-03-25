@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-     xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_height="wrap_content"
-     android:layout_width="match_parent"
-     android:clickable="true"
-     android:padding="5dp"
-    android:background="?selectableItemBackground"
-     
-     android:orientation="vertical"
-     android:focusable="true"
-     android:descendantFocusability="afterDescendants">
+	 xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:layout_height="wrap_content"
+	 android:layout_width="match_parent"
+	 android:background="?attr/selectableItemBackground"
+	 android:clickable="true"
+	 android:paddingVertical="@dimen/list_vertical_padding"
+	 android:orientation="vertical"
+	 android:paddingHorizontal="@dimen/list_horizontal_padding"
+	 android:focusable="true">
 
-    <TextView
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         style="@style/AppTheme.TextAppearanceLarge"
-         android:id="@+id/title_name" />
+	<TextView
+		 android:layout_height="wrap_content"
+		 android:layout_width="wrap_content"
+		 style="@style/AppTheme.TextAppearanceLarge"
+		 android:id="@+id/title_name" />
 
-    <TextView
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         style="@style/AppTheme.TextAppearanceNormal"
-         android:id="@+id/title_name_orig" />
+	<TextView
+		 android:layout_height="wrap_content"
+		 android:layout_width="wrap_content"
+		 style="@style/AppTheme.TextAppearanceNormal"
+		 android:id="@+id/title_name_orig" />
 
-    <TextView
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         style="@style/AppTheme.TextAppearanceNormal"
-         android:id="@+id/title_status" />
+	<TextView
+		 android:layout_height="wrap_content"
+		 android:layout_width="wrap_content"
+		 style="@style/AppTheme.TextAppearanceNormal"
+		 android:id="@+id/title_status" />
 
-    <TextView
-         android:layout_height="wrap_content"
-         android:layout_width="wrap_content"
-         style="@style/AppTheme.TextAppearanceSmall"
-         android:id="@+id/title_name_other" />
+	<TextView
+		 android:layout_height="wrap_content"
+		 android:layout_width="wrap_content"
+		 style="@style/AppTheme.TextAppearanceSmall"
+		 android:id="@+id/title_name_other" />
 
 </LinearLayout>

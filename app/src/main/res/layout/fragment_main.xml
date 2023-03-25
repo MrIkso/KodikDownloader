@@ -1,65 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent"
+	android:fitsSystemWindows="true"
+	android:id="@+id/coordinator">
 
-    <LinearLayout
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:id="@+id/root"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginTop="16dp">
+	<com.google.android.material.appbar.AppBarLayout
+		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		app:liftOnScroll="true"
+		android:fitsSystemWindows="true"
+		android:id="@+id/appbarlayout">
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginEnd="8dp"
-                android:background="@null"
-                android:layout_toLeftOf="@+id/spinnerMethods"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_alignParentTop="true"
-                android:id="@+id/editTextUrl" />
+		<com.google.android.material.appbar.MaterialToolbar
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			app:title="@string/app_name"
+			app:menu="@menu/menu_options"
+			style="@style/Widget.Material3.Toolbar"
+			android:id="@+id/toolbar" />
 
-            <Spinner
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:entries="@array/methods_array"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:theme="@style/AppTheme.TextAppearanceNormalSpinner"
-                android:id="@+id/spinnerMethods">
+	</com.google.android.material.appbar.AppBarLayout>
 
-        </Spinner>
+	<androidx.core.widget.NestedScrollView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </RelativeLayout>
+		<LinearLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp">
+			<RelativeLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:layout_marginTop="16dp"
+				android:layout_marginEnd="8dp"
+				android:id="@+id/root">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:id="@+id/recyclerView"
-                android:overScrollMode="never" />
+				<EditText
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:layout_marginEnd="8dp"
+					android:background="@null"
+					android:singleLine="true"
+					android:layout_toLeftOf="@+id/spinnerMethods"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="8dp"
+					android:layout_marginStart="8dp"
+					android:layout_alignParentTop="true"
+					android:id="@+id/editTextUrl" />
 
-        </FrameLayout>
-    </LinearLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:srcCompat="@drawable/ic_search_black_24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_margin="@dimen/fab_margin"
-        android:id="@+id/buttonSend" />
+				<Spinner
+					android:layout_height="wrap_content"
+					android:layout_width="wrap_content"
+					android:entries="@array/methods_array"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentTop="true"
+					android:theme="@style/AppTheme.TextAppearanceNormalSpinner"
+					android:id="@+id/spinnerMethods">
 
-</FrameLayout>
+				</Spinner>
+
+			</RelativeLayout>
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:layout_height="match_parent"
+				android:layout_width="match_parent"
+				android:id="@+id/recyclerView"
+				android:overScrollMode="never" />
+
+		</LinearLayout>
+
+	</androidx.core.widget.NestedScrollView>
+
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:layout_margin="@dimen/fab_margin"
+		app:srcCompat="@drawable/ic_search_black_24"
+		android:layout_gravity="bottom|right"
+		android:id="@+id/buttonSend" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

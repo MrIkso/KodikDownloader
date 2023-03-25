@@ -1,7 +1,9 @@
 package com.mrikso.kodikdownloader.adapter;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -93,9 +95,11 @@ public class SearchResultAdapter
 
             searchItemBinding.titleName.setText(title);
             searchItemBinding.titleNameOrig.setText(subtitleFormatted);
-
-            searchItemBinding.titleNameOther.setText(result.getOtherTitle());
-
+            if (TextUtils.isEmpty(result.getOtherTitle())) {
+                searchItemBinding.titleNameOther.setVisibility(View.GONE);
+            } else {
+                searchItemBinding.titleNameOther.setText(result.getOtherTitle());
+            }
             if (listener != null) {
                 searchItemBinding
                         .getRoot()

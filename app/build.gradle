@@ -10,8 +10,8 @@ android {
         applicationId "com.mrikso.kodikdownloader"
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
     }
 
     buildTypes {
@@ -40,7 +40,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-    
+    implementation 'androidx.preference:preference:1.2.0'
+
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10") {
             because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")

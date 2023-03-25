@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/menu_downloder"
+        android:title="@string/menu_downloder">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/menu_downloder_adm"
+                    android:title="@string/menu_downloder_adm"
+                     />
+                <item
+                    android:id="@+id/menu_downloder_idm"
+                    android:title="@string/menu_downloder_idm"
+                     />
+                <item
+                    android:id="@+id/menu_downloder_browser"
+                    android:title="@string/menu_downloder_browser"
+                     />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/about"
+        android:title="@string/about"
+        app:showAsAction="never"
+    />
+
+</menu>

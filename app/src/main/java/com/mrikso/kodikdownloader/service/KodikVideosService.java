@@ -22,14 +22,14 @@ public class KodikVideosService {
 
     public KodikVideosService() {}
 
-    private static KodikVideosService newsRepository;
+    private static KodikVideosService kodikVideosService;
 
     public static KodikVideosService getInstance() {
-        if (newsRepository == null) {
-            newsRepository = new KodikVideosService();
+        if (kodikVideosService == null) {
+            kodikVideosService = new KodikVideosService();
         }
 
-        return newsRepository;
+        return kodikVideosService;
     }
 
     public String getVideos(String baseUrl) throws IOException, IOException, IOException {

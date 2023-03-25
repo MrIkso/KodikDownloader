@@ -11,16 +11,25 @@
     <string name="not_found_hint">Not found</string>
     <string name="dvget_not_found">DVGet not installed</string>
     <string name="idm_not_found">IDM not installed</string>
+    <string name="about">About</string>
+    <string name="about_text">The app for downloading content from Kodik service</string>
+    <string name="menu_downloder">Used dowloader</string>
+    <string name="menu_downloder_adm">ADM</string>
+    <string name="menu_downloder_idm">IDM</string>
+    <string name="menu_downloder_browser">Browser</string>
+    
     <string-array name="methods_array">
         <item>Title</item>
         <item>Shikimori</item>
         <item>Kinopoisk</item>
         <item>IMdb</item>
     </string-array>
+	
     <plurals name="episode_hint">
         <item quantity="one">%d episode</item>
         <item quantity="two">%d episodes</item>
         <item quantity="few">%d episodes</item>
         <item quantity="many">%d episodes</item>
+		<item quantity="other">%d episodes</item>
     </plurals>
 </resources>

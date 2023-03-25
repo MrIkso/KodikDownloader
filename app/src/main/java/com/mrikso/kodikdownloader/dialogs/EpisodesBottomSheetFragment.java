@@ -1,15 +1,14 @@
 package com.mrikso.kodikdownloader.dialogs;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.mrikso.kodikdownloader.adapter.EpisodesAdapter;
 import com.mrikso.kodikdownloader.databinding.FragmentEpisodesBinding;
@@ -78,10 +77,6 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
 
             adapter.setResults(listEpisodes);
         }
-        binding.close.setOnClickListener(
-                v -> {
-                    dismiss();
-                });
     }
 
     @Override
