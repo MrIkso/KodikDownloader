@@ -75,7 +75,7 @@ public class KodikVideosService {
             Matcher mat = pat.matcher(json);
             while (mat.find()) {
                 // Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
-                videoLinksMap.put(mat.group(1), "https:" + decodeUrl(mat.group(2)));
+                videoLinksMap.put(mat.group(1), decodeUrl(mat.group(2)));
             }
 
             return videoLinksMap;

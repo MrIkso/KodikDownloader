@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -222,8 +223,13 @@ public class MainFragment extends Fragment
     }
 
     private void downloadVideo(String url) {
-        // Log.d(TAG, url);
-        url = url.replace(":hls:manifest.m3u8", "");
+        Log.d(TAG, url);
+		if(url.startsWith("//")){
+			url = url.replaceFirst("//", "https://");
+		}
+        url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
+		
+		Log.d(TAG, url);
         StringBuilder fileName = new StringBuilder(searchItem.getTitle());
         if (searchItem.getIsSerial()) {
             fileName.append(" — " + getString(R.string.episode_hint, episodeItem.getEpisode()));
