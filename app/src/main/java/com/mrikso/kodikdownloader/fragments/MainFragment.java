@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,14 +31,16 @@ import com.mrikso.kodikdownloader.R;
 import com.mrikso.kodikdownloader.adapter.SearchItemClickListener;
 import com.mrikso.kodikdownloader.adapter.SearchResultAdapter;
 import com.mrikso.kodikdownloader.databinding.FragmentMainBinding;
+import com.mrikso.kodikdownloader.dialogs.DelayedProgressDialog;
 import com.mrikso.kodikdownloader.dialogs.EpisodesBottomSheetFragment;
+import com.mrikso.kodikdownloader.downloader.DownloadFile;
 import com.mrikso.kodikdownloader.downloader.DownloaderMode;
 import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchItem;
-import com.mrikso.kodikdownloader.downloader.DownloadFile;
 import com.mrikso.kodikdownloader.viewmodel.MainFragmentViewModel;
 
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 public class MainFragment extends Fragment
         implements SearchItemClickListener, EpisodesBottomSheetFragment.OnItemClickListener {
@@ -49,7 +52,7 @@ public class MainFragment extends Fragment
     private EpisodeItem episodeItem;
     private DownloaderMode downloaderMode;
     private SharedPreferences sharedPrefs;
-
+    private DelayedProgressDialog progressDialog;
     public static final String TAG = "MainFragment";
 
     @Override
@@ -93,6 +96,8 @@ public class MainFragment extends Fragment
                                 binding.spinnerMethods.getSelectedItemPosition());
                     }
                 });
+
+        progressDialog = new DelayedProgressDialog();
     }
 
     @Nullable
@@ -166,8 +171,22 @@ public class MainFragment extends Fragment
                 .observe(
                         getViewLifecycleOwner(),
                         result -> {
-                            if (result != null && result.size() != 0) {
-                                showQalityChoserDialog(result);
+                            hideProgressDialog();
+                            if (result != null && !result.isEmpty()) {
+                                // Log.i(TAG, "show normal dialog");
+                                showQualityChoserDialog(result, null, false);
+                            }
+                        });
+
+        viewModel
+                .getAllVideosMap()
+                .observe(
+                        getViewLifecycleOwner(),
+                        result -> {
+                            hideProgressDialog();
+                            if (result != null && !result.isEmpty()) {
+                                // Log.i(TAG, "show bathDownload");
+                                showQualityChoserDialog(result.get(1), result, true);
                             }
                         });
     }
@@ -181,6 +200,7 @@ public class MainFragment extends Fragment
         sharedPrefs = null;
         episodeItem = null;
         searchItem = null;
+        progressDialog = null;
     }
 
     @Override
@@ -191,29 +211,46 @@ public class MainFragment extends Fragment
         if (searchItem.getIsSerial()) {
             showEpidodeChoserDialog(searchItem.getEpisodes());
         } else {
+            showProgressDialog();
             viewModel.loadVideos(searchItem.getUrl());
         }
     }
 
-    private void showQalityChoserDialog(Map<String, String> videoMap) {
+    private void showQualityChoserDialog(
+            Map<String, String> videoMap,
+            Map<Integer, Map<String, String>> allVideos,
+            boolean isBatchDowload) {
         String[] qualities = videoMap.keySet().toArray(new String[0]);
 
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle(R.string.qality_choser_title)
-                .setNegativeButton(
-                        android.R.string.cancel,
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                        })
-                .setSingleChoiceItems(
-                        qualities,
-                        0,
-                        (dialog, i) -> {
-                            downloadVideo(videoMap.get(qualities[i]));
-                            dialog.dismiss();
-                        })
-                .create()
-                .show();
+        AlertDialog dialog =
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.quality_choser_title)
+                        .setNegativeButton(
+                                getString(android.R.string.cancel),
+                                (d, which) -> {
+                                    d.dismiss();
+                                })
+                        .setSingleChoiceItems(
+                                qualities,
+                                0,
+                                (d, index) -> {
+                                    String selectedQuality = qualities[index];
+                                    // Log.i(TAG, "selection.q: " + selectedQuality);
+                                    if (isBatchDowload) {
+                                        Executors.newSingleThreadExecutor()
+                                                .execute(
+                                                        () -> {
+                                                            downloadVideosBatch(
+                                                                    allVideos, selectedQuality);
+                                                        });
+                                    } else {
+                                        downloadVideo(videoMap.get(selectedQuality));
+                                    }
+                                    d.dismiss();
+                                })
+                        .create();
+
+        dialog.show();
     }
 
     private void showEpidodeChoserDialog(Map<Integer, String> episodes) {
@@ -224,24 +261,20 @@ public class MainFragment extends Fragment
 
     private void downloadVideo(String url) {
         Log.d(TAG, url);
-		if(url.startsWith("//")){
-			url = url.replaceFirst("//", "https://");
-		}
-        url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
-		
-		Log.d(TAG, url);
+
         StringBuilder fileName = new StringBuilder(searchItem.getTitle());
         if (searchItem.getIsSerial()) {
             fileName.append(" — " + getString(R.string.episode_hint, episodeItem.getEpisode()));
         }
         fileName.append(".mp4");
         // Log.d(TAG, fileName.toString());
-        DownloadFile.download(requireContext(), downloaderMode, url, fileName.toString());
+        DownloadFile.download(requireContext(), downloaderMode, url, fileName.toString(), false);
     }
 
     @Override
     public void onEpisodeItemSelected(EpisodeItem item) {
         episodeItem = item;
+        showProgressDialog();
         viewModel.loadVideos(item.getEpisodeUrl());
     }
 
@@ -310,5 +343,54 @@ public class MainFragment extends Fragment
                         })
                 .create()
                 .show();
+    }
+
+    private void showProgressDialog() {
+        progressDialog.show(getParentFragmentManager(), DelayedProgressDialog.tag);
+    }
+
+    private void hideProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onBatchDownloadItemClicked(SearchItem searchItem) {
+        if (downloaderMode == DownloaderMode.ADM) {
+            this.searchItem = searchItem;
+            showProgressDialog();
+
+            viewModel.loadVideos(searchItem.getEpisodes());
+        } else {
+            Toast.makeText(
+                            requireContext(),
+                            R.string.batch_download_avaliable_only_on_adm,
+                            Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    private void downloadVideosBatch(
+            Map<Integer, Map<String, String>> allVideos, String selectedQuality) {
+        StringBuilder videos = new StringBuilder();
+        for (Map.Entry<Integer, Map<String, String>> episodeVideos : allVideos.entrySet()) {
+            int episodeNum = episodeVideos.getKey();
+            Map<String, String> episodeVideoMap = episodeVideos.getValue();
+            // Log.i(TAG, "GENERATING INFO..");
+            String url = episodeVideoMap.get(selectedQuality);
+            String fileName =
+                    String.format(
+                            "%s  —  %s.mp4",
+                            searchItem.getTitle(), getString(R.string.episode_hint, episodeNum));
+            videos.append(url);
+            videos.append("<info>");
+            videos.append(fileName);
+            videos.append("<line>");
+        }
+
+        if (videos.toString().endsWith("<line>")) {
+            videos.substring(0, videos.length() - 6);
+        }
+
+        DownloadFile.download(requireContext(), DownloaderMode.ADM, videos.toString(), null, true);
     }
 }

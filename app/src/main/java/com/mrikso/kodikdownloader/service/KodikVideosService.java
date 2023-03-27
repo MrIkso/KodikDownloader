@@ -142,6 +142,12 @@ public class KodikVideosService {
     private String decodeUrl(String encoded) {
         StringBuilder sb = new StringBuilder(encoded);
         sb.reverse();
-        return new String(Base64.decode(sb.toString(), Base64.NO_WRAP));
+        String url = new String(Base64.decode(sb.toString(), Base64.NO_WRAP));
+
+        if (url.startsWith("//")) {
+            url = url.replaceFirst("//", "https://");
+        }
+        url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
+        return url;
     }
 }

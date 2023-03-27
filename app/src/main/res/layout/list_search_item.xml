@@ -1,37 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	 xmlns:android="http://schemas.android.com/apk/res/android"
+	 xmlns:app="http://schemas.android.com/apk/res-auto"
 	 android:layout_height="wrap_content"
 	 android:layout_width="match_parent"
 	 android:background="?attr/selectableItemBackground"
 	 android:clickable="true"
 	 android:paddingVertical="@dimen/list_vertical_padding"
-	 android:orientation="vertical"
+	 android:orientation="horizontal"
 	 android:paddingHorizontal="@dimen/list_horizontal_padding"
 	 android:focusable="true">
 
-	<TextView
+	<LinearLayout
 		 android:layout_height="wrap_content"
-		 android:layout_width="wrap_content"
-		 style="@style/AppTheme.TextAppearanceLarge"
-		 android:id="@+id/title_name" />
+		 android:layout_width="match_parent"
+		 android:orientation="vertical"
+		 android:layout_weight="1.0">
 
-	<TextView
-		 android:layout_height="wrap_content"
-		 android:layout_width="wrap_content"
-		 style="@style/AppTheme.TextAppearanceNormal"
-		 android:id="@+id/title_name_orig" />
+		<TextView
+			 android:layout_height="wrap_content"
+			 android:layout_width="wrap_content"
+			 style="@style/AppTheme.TextAppearanceLarge"
+			 android:id="@+id/title_name" />
 
-	<TextView
-		 android:layout_height="wrap_content"
-		 android:layout_width="wrap_content"
-		 style="@style/AppTheme.TextAppearanceNormal"
-		 android:id="@+id/title_status" />
+		<TextView
+			 android:layout_height="wrap_content"
+			 android:layout_width="wrap_content"
+			 style="@style/AppTheme.TextAppearanceNormal"
+			 android:id="@+id/title_name_orig" />
 
-	<TextView
-		 android:layout_height="wrap_content"
-		 android:layout_width="wrap_content"
-		 style="@style/AppTheme.TextAppearanceSmall"
-		 android:id="@+id/title_name_other" />
+		<TextView
+			 android:layout_height="wrap_content"
+			 android:layout_width="wrap_content"
+			 style="@style/AppTheme.TextAppearanceNormal"
+			 android:id="@+id/title_status" />
+
+		<TextView
+			 android:layout_height="wrap_content"
+			 android:layout_width="wrap_content"
+			 style="@style/AppTheme.TextAppearanceSmall"
+			 android:id="@+id/title_name_other" />
+
+	</LinearLayout>
+
+	<RelativeLayout
+		 android:layout_height="match_parent"
+		 android:layout_width="38dp"
+		 android:background="?attr/selectableItemBackgroundBorderless"
+		 android:gravity="center"
+		 android:clickable="true"
+		 android:focusable="true"
+		 android:id="@+id/download">
+
+		<androidx.appcompat.widget.AppCompatImageView
+			 android:layout_height="24dp"
+			 android:layout_width="24dp"
+			 android:src="@drawable/ic_download" />
+
+	</RelativeLayout>
 
 </LinearLayout>

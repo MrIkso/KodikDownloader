@@ -13,7 +13,11 @@ import com.mrikso.kodikdownloader.R;
 public class DownloadFile {
 
     public static void download(
-            Context context, DownloaderMode downloaderMode, String link, String fileName) {
+            Context context,
+            DownloaderMode downloaderMode,
+            String link,
+            String fileName,
+            boolean batchMode) {
 
         boolean isDVGetInstalled = false;
         boolean isIDMInstalled = false;
@@ -33,11 +37,14 @@ public class DownloadFile {
                     intent.setClassName("com.dv.adm.pay", "com.dv.adm.pay.AEditor");
                     isDVGetInstalled = true;
                 }
-			
-                if (isDVGetInstalled) {
-                    intent.putExtra("android.intent.extra.TEXT", link);
-                    intent.putExtra("com.android.extra.filename", fileName);
 
+                if (isDVGetInstalled) {
+                    if (batchMode) {
+                        intent.putExtra("com.dv.get.ACTION_LIST_ADD", link);
+                    } else {
+                        intent.putExtra("android.intent.extra.TEXT", link);
+                        intent.putExtra("com.android.extra.filename", fileName);
+                    }
                     ContextCompat.startActivity(context, intent, null);
                 } else {
                     Toast.makeText(
@@ -103,7 +110,7 @@ public class DownloadFile {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        //browserIntent.addCategory(Intent.CATEGORY_APP_BROWSER);
+        // browserIntent.addCategory(Intent.CATEGORY_APP_BROWSER);
         try {
             ContextCompat.startActivity(context, browserIntent, null);
             return;

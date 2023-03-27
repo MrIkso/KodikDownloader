@@ -6,7 +6,7 @@
     <string name="season_hint">season %d</string>
     <string name="episodes">Episodes</string>
     <string name="episode_hint">Episode %d</string>
-    <string name="qality_choser_title">Select video quality</string>
+    <string name="quality_choser_title">Select video quality</string>
     <string name="found_hint">Found %d results</string>
     <string name="not_found_hint">Not found</string>
     <string name="dvget_not_found">DVGet not installed</string>
@@ -17,7 +17,8 @@
     <string name="menu_downloder_adm">ADM</string>
     <string name="menu_downloder_idm">IDM</string>
     <string name="menu_downloder_browser">Browser</string>
-    
+    <string name="batch_download_avaliable_only_on_adm">Batch download mode available only on ADM</string>
+	
     <string-array name="methods_array">
         <item>Title</item>
         <item>Shikimori</item>

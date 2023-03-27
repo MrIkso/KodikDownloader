@@ -89,5 +89,6 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         super.onDestroyView();
         binding = null;
         adapter = null;
+		listener = null;
     }
 }

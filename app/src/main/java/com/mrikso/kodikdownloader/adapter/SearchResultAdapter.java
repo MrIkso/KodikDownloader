@@ -89,8 +89,12 @@ public class SearchResultAdapter
                 // Log.i("tag", seasonModel.getLink());
                 searchItem.setEpisodes(seasonModel.getEpisodes());
                 searchItemBinding.titleStatus.setText(statusExt);
+				if(result.getEpisodesCount() < 2){
+					searchItemBinding.download.setVisibility(View.GONE);
+				}
             } else {
                 searchItemBinding.titleStatus.setText(status);
+				searchItemBinding.download.setVisibility(View.GONE);
             }
 
             searchItemBinding.titleName.setText(title);
@@ -104,6 +108,10 @@ public class SearchResultAdapter
                 searchItemBinding
                         .getRoot()
                         .setOnClickListener(v -> listener.onSearchItemClicked(searchItem));
+				
+				searchItemBinding
+                        .download
+                        .setOnClickListener(v -> listener.onBatchDownloadItemClicked(searchItem));
             }
         }
     }
