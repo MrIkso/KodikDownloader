@@ -1,6 +1,7 @@
 package com.mrikso.kodikdownloader.service;
 
 import android.util.Base64;
+import android.util.Log;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -70,11 +71,11 @@ public class KodikVideosService {
         Map<String, String> videoLinksMap = new HashMap<>();
         try {
             String json = getVideos(url);
-            // Log.i("tag", json);
+            Log.i("tag", json);
             Pattern pat = Pattern.compile(URL_PATTERN);
             Matcher mat = pat.matcher(json);
             while (mat.find()) {
-                // Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
+                Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
                 videoLinksMap.put(mat.group(1), decodeUrl(mat.group(2)));
             }
 
@@ -139,10 +140,35 @@ public class KodikVideosService {
         else return null;
     }
 
+    /*
+    // decoder from js script 
+       	var src = "Yl9woT91MP5eo2Ecnl1mqT9lLJqyYzAioF91p2IlqKOfo2Sxpl83MQL1MGWuBF01ZQyvYGEwMwRgBTD0Al1wMwL5AmtmZmZ3AmpiMGH1ZmR4BTVkBJSxLmVlZJZ0MGV1ATEyAQHkMGSzBQL6ZwNlZmNmZwxkBP8mAwNhoKN0BzufpmcgLJ5cMzImqP5gZ3H4";
+
+       var t;
+       src = (t = src, atob(t.replace(/[a-zA-Z]/g, function(e) {
+           return String.fromCharCode((e <= "Z" ? 90 : 122) >= (e = e.charCodeAt(0) + 13) ? e : e - 26)
+       })));
+
+       console.log(src);
+       	*/
+
     private String decodeUrl(String encoded) {
-        StringBuilder sb = new StringBuilder(encoded);
-        sb.reverse();
-        String url = new String(Base64.decode(sb.toString(), Base64.NO_WRAP));
+        Pattern pattern = Pattern.compile("[A-Za-z]");
+        StringBuffer encodedBase64 = new StringBuffer();
+        Matcher matcher = pattern.matcher(encoded);
+        while (matcher.find()) {
+            char m = matcher.group().charAt(0);
+            int temp = (int) m + 13;
+            String rep =
+                    Character.toString(
+                            ((Character.compare(m, 'Z') <= 0 ? 90 : 122) >= temp)
+                                    ? (char) temp
+                                    : (char) (temp - 26));
+            matcher.appendReplacement(encodedBase64, rep);
+        }
+        matcher.appendTail(encodedBase64);
+
+        String url = new String(Base64.decode(encodedBase64.toString(), Base64.NO_WRAP));
 
         if (url.startsWith("//")) {
             url = url.replaceFirst("//", "https://");
