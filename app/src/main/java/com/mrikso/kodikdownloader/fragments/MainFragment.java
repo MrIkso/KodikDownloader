@@ -6,13 +6,16 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -87,14 +90,22 @@ public class MainFragment extends Fragment
                         buttonSend.setEnabled(!TextUtils.isEmpty(s));
                     }
                 });
+		
+		binding.editTextUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    		@Override
+    		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        		if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            		performSearch();
+						
+            		return true;
+        		}
+        			return false;
+    			}
+		});
 
         buttonSend.setOnClickListener(
                 v -> {
-                    if (!TextUtils.isEmpty(binding.editTextUrl.getText())) {
-                        viewModel.startSearch(
-                                binding.editTextUrl.getText().toString(),
-                                binding.spinnerMethods.getSelectedItemPosition());
-                    }
+                    performSearch();
                 });
 
         progressDialog = new DelayedProgressDialog();
@@ -119,6 +130,14 @@ public class MainFragment extends Fragment
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(resultAdapter);
     }
+	
+	private void performSearch(){
+		if (!TextUtils.isEmpty(binding.editTextUrl.getText())) {
+                        viewModel.startSearch(
+                                binding.editTextUrl.getText().toString(),
+                                binding.spinnerMethods.getSelectedItemPosition());
+                    }
+	}
 
     private void searchTypeSpinnerListener() {
         binding.spinnerMethods.setOnItemSelectedListener(
@@ -237,12 +256,9 @@ public class MainFragment extends Fragment
                                     String selectedQuality = qualities[index];
                                     // Log.i(TAG, "selection.q: " + selectedQuality);
                                     if (isBatchDowload) {
-                                        Executors.newSingleThreadExecutor()
-                                                .execute(
-                                                        () -> {
-                                                            downloadVideosBatch(
-                                                                    allVideos, selectedQuality);
-                                                        });
+
+                                        downloadVideosBatch(allVideos, selectedQuality);
+
                                     } else {
                                         downloadVideo(videoMap.get(selectedQuality));
                                     }
@@ -375,7 +391,7 @@ public class MainFragment extends Fragment
         for (Map.Entry<Integer, Map<String, String>> episodeVideos : allVideos.entrySet()) {
             int episodeNum = episodeVideos.getKey();
             Map<String, String> episodeVideoMap = episodeVideos.getValue();
-            // Log.i(TAG, "GENERATING INFO..");
+             Log.i(TAG, "GENERATING INFO..");
             String url = episodeVideoMap.get(selectedQuality);
             String fileName =
                     String.format(
@@ -390,7 +406,6 @@ public class MainFragment extends Fragment
         if (videos.toString().endsWith("<line>")) {
             videos.substring(0, videos.length() - 6);
         }
-
         DownloadFile.download(requireContext(), DownloaderMode.ADM, videos.toString(), null, true);
     }
 }

@@ -1,7 +1,6 @@
 package com.mrikso.kodikdownloader.adapter;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mrikso.kodikdownloader.R;
 import com.mrikso.kodikdownloader.databinding.ListSearchItemBinding;
-import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchItem;
 import com.mrikso.kodikdownloader.model.SearchResultModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +64,7 @@ public class SearchResultAdapter
             SearchItem searchItem = new SearchItem(title, result.getLink());
             String subtitleFormatted =
                     String.format("%d / %s", result.getYear(), result.getTitleOrig());
-            if (result.getType().contains("serial")) {
+            if (result.getType().contains("serial") ) {
                 String episode =
                         searchItemBinding
                                 .getRoot()
@@ -83,15 +82,17 @@ public class SearchResultAdapter
                                 .getString(R.string.season_hint, result.getLastSeason());
                 String statusExt = String.format("%s (%s) – %s", episode, season, status);
                 searchItem.setIsSerial(true);
-
-                SearchResultModel.Results.Season seasonModel =
-                        result.getSeasons().get(result.getSeasons().keySet().toArray()[0]);
-                // Log.i("tag", seasonModel.getLink());
-                searchItem.setEpisodes(seasonModel.getEpisodes());
-                searchItemBinding.titleStatus.setText(statusExt);
-				if(result.getEpisodesCount() < 2){
-					searchItemBinding.download.setVisibility(View.GONE);
+				
+				Map<Integer, SearchResultModel.Results.Season> seasonsMap = result.getSeasons();
+				Map<Integer, String> episodesMap = new HashMap<>();
+				
+				for (Map.Entry<Integer, SearchResultModel.Results.Season> seasons : seasonsMap.entrySet()){
+					seasons.getValue().getEpisodes().forEach(episodesMap::putIfAbsent);
 				}
+				
+                searchItem.setEpisodes(episodesMap);
+				searchItemBinding.download.setVisibility(View.VISIBLE);
+                searchItemBinding.titleStatus.setText(statusExt);
             } else {
                 searchItemBinding.titleStatus.setText(status);
 				searchItemBinding.download.setVisibility(View.GONE);

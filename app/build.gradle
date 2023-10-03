@@ -3,9 +3,10 @@ plugins {
 }
 
 android {
-    compileSdk 33
-    buildToolsVersion "33.0.0"
-
+    compileSdk 34
+	buildToolsVersion "34.0.0"
+	namespace = "com.mrikso.kodikdownloader"
+	
     defaultConfig {
         applicationId "com.mrikso.kodikdownloader"
         minSdk 21
@@ -29,6 +30,10 @@ android {
 	buildFeatures {
         viewBinding true
     }
+	
+	lint {
+                          baseline = file("lint-baseline.xml")
+                      }
 }
 
 dependencies {

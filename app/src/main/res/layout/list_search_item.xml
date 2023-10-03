@@ -5,7 +5,7 @@
 	 android:layout_height="wrap_content"
 	 android:layout_width="match_parent"
 	 android:background="?attr/selectableItemBackground"
-	 android:clickable="true"
+	 android:baselineAligned="false" android:clickable="true"
 	 android:paddingVertical="@dimen/list_vertical_padding"
 	 android:orientation="horizontal"
 	 android:paddingHorizontal="@dimen/list_horizontal_padding"
