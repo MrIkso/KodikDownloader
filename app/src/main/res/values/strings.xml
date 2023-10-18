@@ -12,7 +12,7 @@
     <string name="dvget_not_found">DVGet not installed</string>
     <string name="idm_not_found">IDM not installed</string>
     <string name="about">About</string>
-    <string name="about_text">The app for downloading content from Kodik service</string>
+    <string name="about_text">The app for downloading content from Kodik service\nVersion: %s (%s)</string>
     <string name="menu_downloder">Used dowloader</string>
     <string name="menu_downloder_adm">ADM</string>
     <string name="menu_downloder_idm">IDM</string>

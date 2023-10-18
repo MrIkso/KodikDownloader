@@ -106,7 +106,7 @@ public class DownloadFile {
         }
     }
 
-    private static void openInBrowser(Context context, String link) {
+    public static void openInBrowser(Context context, String link) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         browserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

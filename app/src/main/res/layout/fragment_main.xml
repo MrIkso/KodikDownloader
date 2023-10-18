@@ -83,6 +83,8 @@
 		android:layout_width="wrap_content"
 		android:layout_margin="@dimen/fab_margin"
 		app:srcCompat="@drawable/ic_search_black_24"
+		    app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+        
 		android:layout_gravity="bottom|right"
 		android:id="@+id/buttonSend" />
 

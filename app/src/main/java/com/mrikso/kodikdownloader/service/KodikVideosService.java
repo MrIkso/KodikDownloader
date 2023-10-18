@@ -169,7 +169,6 @@ public class KodikVideosService {
         matcher.appendTail(encodedBase64);
 
         String url = new String(Base64.decode(encodedBase64.toString(), Base64.NO_WRAP));
-
         if (url.startsWith("//")) {
             url = url.replaceFirst("//", "https://");
         }

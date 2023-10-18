@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import com.mrikso.kodikdownloader.BuildConfig;
 import com.mrikso.kodikdownloader.R;
 import com.mrikso.kodikdownloader.adapter.SearchItemClickListener;
 import com.mrikso.kodikdownloader.adapter.SearchResultAdapter;
@@ -43,7 +44,6 @@ import com.mrikso.kodikdownloader.model.SearchItem;
 import com.mrikso.kodikdownloader.viewmodel.MainFragmentViewModel;
 
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 public class MainFragment extends Fragment
         implements SearchItemClickListener, EpisodesBottomSheetFragment.OnItemClickListener {
@@ -129,6 +129,7 @@ public class MainFragment extends Fragment
         resultAdapter.setSearchItemClickListener(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(resultAdapter);
+		
     }
 	
 	private void performSearch(){
@@ -349,12 +350,21 @@ public class MainFragment extends Fragment
     }
 
     private void showAboutDialog() {
+		String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+		String versionName = String.valueOf(BuildConfig.VERSION_NAME);
+
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.about)
-                .setMessage(R.string.about_text)
+                .setMessage(getString(R.string.about_text, versionName, versionCode))
                 .setNeutralButton(
                         android.R.string.ok,
                         (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+				.setPositiveButton(
+                        "GitHub",
+                        (dialog, which) -> {
+							DownloadFile.openInBrowser(requireContext(), "https://github.com/MrIkso/KodikDownloader");
                             dialog.dismiss();
                         })
                 .create()
@@ -391,7 +401,7 @@ public class MainFragment extends Fragment
         for (Map.Entry<Integer, Map<String, String>> episodeVideos : allVideos.entrySet()) {
             int episodeNum = episodeVideos.getKey();
             Map<String, String> episodeVideoMap = episodeVideos.getValue();
-             Log.i(TAG, "GENERATING INFO..");
+             //Log.i(TAG, "GENERATING INFO..");
             String url = episodeVideoMap.get(selectedQuality);
             String fileName =
                     String.format(

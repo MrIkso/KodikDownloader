@@ -6,13 +6,14 @@ android {
     compileSdk 34
 	buildToolsVersion "34.0.0"
 	namespace = "com.mrikso.kodikdownloader"
-	
+	buildFeatures.buildConfig = true
     defaultConfig {
         applicationId "com.mrikso.kodikdownloader"
         minSdk 21
         targetSdk 33
         versionCode 5
         versionName "1.4"
+		archivesBaseName = "KodikDownloader-$versionName($versionCode)"
     }
 
     buildTypes {
