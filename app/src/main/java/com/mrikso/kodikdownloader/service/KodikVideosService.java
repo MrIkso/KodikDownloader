@@ -33,7 +33,7 @@ public class KodikVideosService {
         return kodikVideosService;
     }
 
-    public String getVideos(String baseUrl) throws IOException, IOException, IOException {
+    public String getVideos(String baseUrl) throws IOException {
         // thanks by immisterio
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
 
@@ -48,7 +48,7 @@ public class KodikVideosService {
         String hash = getMatcherResult("videoInfo.hash = '([^']+)'", ifRame, 1);
         String id = getMatcherResult("videoInfo.id = '([^']+)'", ifRame, 1);
 
-        String url = String.format("https://%s/gvi", domain);
+        String url = String.format("https://%s/vdu", domain);
 
         RequestBody formBody =
                 new FormBody.Builder()

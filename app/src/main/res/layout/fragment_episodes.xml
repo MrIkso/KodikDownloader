@@ -1,43 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-	 xmlns:android="http://schemas.android.com/apk/res/android"
-	 xmlns:app="http://schemas.android.com/apk/res-auto"
-	 xmlns:tools="http://schemas.android.com/tools"
-	 android:layout_height="match_parent"
-	 android:layout_width="match_parent"
-	 app:layout_behavior="@string/bottom_sheet_behavior"
-	 style="@style/Widget.Material3.BottomSheet">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    style="@style/Widget.Material3.BottomSheet">
 
-	<com.google.android.material.bottomsheet.BottomSheetDragHandleView
-		 android:layout_height="wrap_content"
-		 android:layout_width="match_parent"
-		 android:id="@+id/drag_handle" />
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/drag_handle" />
 
-	<RelativeLayout
-		 android:layout_height="match_parent"
-		 android:layout_width="match_parent"
-		 android:layout_below="@id/drag_handle"
-		 android:orientation="vertical"
-		 android:layout_weight="1">
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/drag_handle"
+        android:orientation="vertical"
+        android:layout_weight="1">
 
-		<TextView
-			 android:layout_height="wrap_content"
-			 android:layout_width="wrap_content"
-			 android:layout_marginBottom="16dp"
-			 android:gravity="center"
-			 android:textSize="18sp"
-			 android:layout_centerHorizontal="true"
-			 android:textColor="?attr/colorOnSurface"
-			 android:id="@+id/title"
-			 android:text="@string/episodes" />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_centerHorizontal="true"
+            android:textColor="?attr/colorOnSurface"
+            android:id="@+id/title"
+            android:text="@string/episodes" />
 
-		<androidx.recyclerview.widget.RecyclerView
-			 android:layout_height="match_parent"
-			 android:layout_width="match_parent"
-			 android:layout_below="@id/title"
-			 android:id="@+id/recyclerView"
-			 android:overScrollMode="never" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title"
+            android:layout_above="@id/downloadSelected"
+            android:id="@+id/recyclerView"
+            android:overScrollMode="never" />
 
-	</RelativeLayout>
+        <com.google.android.material.button.MaterialButton
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:ellipsize="end"
+            android:visibility="gone"
+            android:layout_margin="20dp"
+            android:layout_centerHorizontal="true"
+            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            android:id="@+id/downloadSelected"
+            android:text="@string/download_selected" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

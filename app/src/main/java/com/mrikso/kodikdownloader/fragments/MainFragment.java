@@ -41,8 +41,10 @@ import com.mrikso.kodikdownloader.downloader.DownloadFile;
 import com.mrikso.kodikdownloader.downloader.DownloaderMode;
 import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchItem;
+import com.mrikso.kodikdownloader.utils.KeyboardUtils;
 import com.mrikso.kodikdownloader.viewmodel.MainFragmentViewModel;
 
+import java.util.List;
 import java.util.Map;
 
 public class MainFragment extends Fragment
@@ -90,18 +92,19 @@ public class MainFragment extends Fragment
                         buttonSend.setEnabled(!TextUtils.isEmpty(s));
                     }
                 });
-		
-		binding.editTextUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-    		@Override
-    		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        		if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            		performSearch();
-						
-            		return true;
-        		}
-        			return false;
-    			}
-		});
+
+        binding.editTextUrl.setOnEditorActionListener(
+                new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            performSearch();
+
+                            return true;
+                        }
+                        return false;
+                    }
+                });
 
         buttonSend.setOnClickListener(
                 v -> {
@@ -129,16 +132,16 @@ public class MainFragment extends Fragment
         resultAdapter.setSearchItemClickListener(this);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerView.setAdapter(resultAdapter);
-		
     }
-	
-	private void performSearch(){
-		if (!TextUtils.isEmpty(binding.editTextUrl.getText())) {
-                        viewModel.startSearch(
-                                binding.editTextUrl.getText().toString(),
-                                binding.spinnerMethods.getSelectedItemPosition());
-                    }
-	}
+
+    private void performSearch() {
+        if (!TextUtils.isEmpty(binding.editTextUrl.getText())) {
+            KeyboardUtils.hideKeyboard(this);
+            viewModel.startSearch(
+                    binding.editTextUrl.getText().toString(),
+                    binding.spinnerMethods.getSelectedItemPosition());
+        }
+    }
 
     private void searchTypeSpinnerListener() {
         binding.spinnerMethods.setOnItemSelectedListener(
@@ -205,8 +208,8 @@ public class MainFragment extends Fragment
                         result -> {
                             hideProgressDialog();
                             if (result != null && !result.isEmpty()) {
-                                // Log.i(TAG, "show bathDownload");
-                                showQualityChoserDialog(result.get(1), result, true);
+                                 Log.i(TAG, "show bathDownload");
+                                showQualityChoserDialog(result.values().stream().findFirst().get(), result, true);
                             }
                         });
     }
@@ -240,6 +243,8 @@ public class MainFragment extends Fragment
             Map<String, String> videoMap,
             Map<Integer, Map<String, String>> allVideos,
             boolean isBatchDowload) {
+        // Print the resulting map
+        videoMap.forEach((key, item) -> System.out.println("Key: " + key + ", Data: " + item));
         String[] qualities = videoMap.keySet().toArray(new String[0]);
 
         AlertDialog dialog =
@@ -350,8 +355,8 @@ public class MainFragment extends Fragment
     }
 
     private void showAboutDialog() {
-		String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
-		String versionName = String.valueOf(BuildConfig.VERSION_NAME);
+        String versionCode = String.valueOf(BuildConfig.VERSION_CODE);
+        String versionName = String.valueOf(BuildConfig.VERSION_NAME);
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.about)
@@ -361,10 +366,11 @@ public class MainFragment extends Fragment
                         (dialog, which) -> {
                             dialog.dismiss();
                         })
-				.setPositiveButton(
+                .setPositiveButton(
                         "GitHub",
                         (dialog, which) -> {
-							DownloadFile.openInBrowser(requireContext(), "https://github.com/MrIkso/KodikDownloader");
+                            DownloadFile.openInBrowser(
+                                    requireContext(), "https://github.com/MrIkso/KodikDownloader");
                             dialog.dismiss();
                         })
                 .create()
@@ -401,7 +407,7 @@ public class MainFragment extends Fragment
         for (Map.Entry<Integer, Map<String, String>> episodeVideos : allVideos.entrySet()) {
             int episodeNum = episodeVideos.getKey();
             Map<String, String> episodeVideoMap = episodeVideos.getValue();
-             //Log.i(TAG, "GENERATING INFO..");
+            // Log.i(TAG, "GENERATING INFO..");
             String url = episodeVideoMap.get(selectedQuality);
             String fileName =
                     String.format(
@@ -417,5 +423,11 @@ public class MainFragment extends Fragment
             videos.substring(0, videos.length() - 6);
         }
         DownloadFile.download(requireContext(), DownloaderMode.ADM, videos.toString(), null, true);
+    }
+
+    @Override
+    public void onDownloadMultiSelected(List<EpisodeItem> items) {
+        showProgressDialog();
+        viewModel.loadVideos(items);
     }
 }

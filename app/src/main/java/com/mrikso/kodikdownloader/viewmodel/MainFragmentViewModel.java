@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchResultModel;
 import com.mrikso.kodikdownloader.repository.KodikRepository;
 import com.mrikso.kodikdownloader.service.KodikVideosService;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class MainFragmentViewModel extends ViewModel {
     private final String TAG = "MainFragmentViewModel";
@@ -72,6 +74,25 @@ public class MainFragmentViewModel extends ViewModel {
                         });
     }
 
+    public void loadVideos(List<EpisodeItem> seasonEpisodes) {
+        Executors.newSingleThreadExecutor()
+                .execute(
+                        () -> {
+                            try {
+                                Map<Integer, String> itemMap =
+                                        seasonEpisodes.stream()
+                                                .collect(
+                                                        Collectors.toMap(
+                                                                EpisodeItem::getEpisode,
+                                                                item -> item.getEpisodeUrl()));
+
+                                mapOfAllVideoLinks.postValue(batchDownload(itemMap));
+                            } catch (InterruptedException ie) {
+                                ie.printStackTrace();
+                            }
+                        });
+    }
+
     public LiveData<Map<String, String>> getVideosMap() {
         return mapOfVideoLinks;
     }
@@ -86,7 +107,7 @@ public class MainFragmentViewModel extends ViewModel {
         Map<Integer, Map<String, String>> episodesVideos = new HashMap<>(seasonEpisodes.size());
 
         for (Map.Entry<Integer, String> ep : seasonEpisodes.entrySet()) {
-             Log.i(TAG, ep.getKey() + " " + ep.getValue());
+            Log.i(TAG, ep.getKey() + " " + ep.getValue());
             episodesVideos.put(ep.getKey(), kodikVideosService.getVideosMap(ep.getValue()));
             Thread.sleep(100);
         }

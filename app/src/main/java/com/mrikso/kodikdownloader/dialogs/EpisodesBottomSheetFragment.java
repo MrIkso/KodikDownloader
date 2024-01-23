@@ -29,6 +29,7 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
 
     public interface OnItemClickListener {
         void onEpisodeItemSelected(EpisodeItem item);
+        void onDownloadMultiSelected(List<EpisodeItem> items);
     }
 
     public static EpisodesBottomSheetFragment newInstance(Map<Integer, String> items) {
@@ -77,6 +78,7 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
 
             adapter.setResults(listEpisodes);
         }
+        binding.downloadSelected.setOnClickListener(v-> listener.onDownloadMultiSelected(adapter.getSelected()));
     }
 
     @Override
@@ -89,6 +91,11 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         super.onDestroyView();
         binding = null;
         adapter = null;
-		listener = null;
+        listener = null;
+    }
+
+    @Override
+    public void onMultiselectModeEnable(boolean enabled) {
+        binding.downloadSelected.setVisibility(enabled ? View.VISIBLE : View.GONE);
     }
 }

@@ -14,7 +14,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class KodikRepository {
-    public final String KODIK_TOKEN = "2d343183c2f3cfb3c557e409460875e2";
+    public final String KODIK_TOKEN = "4492ae176f94d3103750b9443139fdc5";
     private static KodikService myInterface;
     private final MutableLiveData<SearchResultModel> listOfMovies = new MutableLiveData<>();
 
