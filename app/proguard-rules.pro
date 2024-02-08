@@ -21,3 +21,33 @@
 #-renamesourcefileattribute SourceFile
 -dontobfuscate
 -keep class com.mrikso.kodikdownloader.** { *; }
+-keep,allowobfuscation,allowshrinking interface com.mrikso.kodikdownloader.service.KodikService
+
+## GSON 2.2.4 specific rules ##
+
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+-keepattributes EnclosingMethod
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.stream.** { *; }
+
+ # Keep generic signature of RxJava3 (R8 full mode strips signatures from non-kept items). 
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Flowable 
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Maybe 
+ -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Observable 
+ -keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Single 
+ # Keep generic signature of Call, Response (R8 full mode strips signatures from non-kept items). 
+ -keep,allowobfuscation,allowshrinking interface retrofit2.Call 
+ -keep,allowobfuscation,allowshrinking class retrofit2.Response 
+  
+ # With R8 full mode generic signatures are stripped for classes that are not 
+ # kept. Suspend functions are wrapped in continuations where the type argument 
+ # is used. 
+ -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation 
