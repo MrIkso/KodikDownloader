@@ -1,7 +1,6 @@
 package com.mrikso.kodikdownloader.service;
 
 import android.util.Base64;
-import android.util.Log;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -20,6 +19,7 @@ import java.util.regex.Pattern;
 public class KodikVideosService {
 
     private final String URL_PATTERN = "\"([0-9]+)p?\":\\[\\{\"src\":\"([^\"]+)";
+    private final String PLAYER_JS_PATTERN = "src=\"/(assets/js/app\\.player_[^\"]+\\.js)\"";
 
     public KodikVideosService() {}
 
@@ -48,34 +48,41 @@ public class KodikVideosService {
         String hash = getMatcherResult("videoInfo.hash = '([^']+)'", ifRame, 1);
         String id = getMatcherResult("videoInfo.id = '([^']+)'", ifRame, 1);
 
-        String url = String.format("https://%s/vdu", domain);
+        String playerJsUrl = getMatcherResult(PLAYER_JS_PATTERN, ifRame, 1);
+        if (!playerJsUrl.isEmpty()) {
+            String playerJs = loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
+            //Log.i("tag", playerJs);
+            String decodedUrl = decodeBase64(getMatcherResult("type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
+            String url = String.format("https://%s%s", domain, decodedUrl);
+            //Log.i("tag", url);
+            RequestBody formBody =
+                    new FormBody.Builder()
+                            .add("d", domain)
+                            .add("d_sign", d_sign)
+                            .add("pd", pd)
+                            .add("pd_sign", pd_sign)
+                            .add("ref", "")
+                            .add("bad_user", "false")
+                            .add("type", type)
+                            .add("hash", hash)
+                            .add("id", id)
+                            .build();
 
-        RequestBody formBody =
-                new FormBody.Builder()
-                        .add("d", domain)
-                        .add("d_sign", d_sign)
-                        .add("pd", pd)
-                        .add("pd_sign", pd_sign)
-                        .add("ref", "")
-                        .add("bad_user", "false")
-                        .add("type", type)
-                        .add("hash", hash)
-                        .add("id", id)
-                        .build();
-
-        // Log.i("tag", url);
-        return loadPage(url, formBody);
+            // Log.i("tag", url);
+            return loadPage(url, formBody);
+        }
+        return null;
     }
 
     public Map<String, String> getVideosMap(String url) {
         Map<String, String> videoLinksMap = new HashMap<>();
         try {
             String json = getVideos(url);
-            Log.i("tag", json);
+            //Log.i("tag", json);
             Pattern pat = Pattern.compile(URL_PATTERN);
             Matcher mat = pat.matcher(json);
             while (mat.find()) {
-                Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
+                //Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
                 videoLinksMap.put(mat.group(1), decodeUrl(mat.group(2)));
             }
 
@@ -141,7 +148,7 @@ public class KodikVideosService {
     }
 
     /*
-    // decoder from js script 
+    // decoder from js script
        	var src = "Yl9woT91MP5eo2Ecnl1mqT9lLJqyYzAioF91p2IlqKOfo2Sxpl83MQL1MGWuBF01ZQyvYGEwMwRgBTD0Al1wMwL5AmtmZmZ3AmpiMGH1ZmR4BTVkBJSxLmVlZJZ0MGV1ATEyAQHkMGSzBQL6ZwNlZmNmZwxkBP8mAwNhoKN0BzufpmcgLJ5cMzImqP5gZ3H4";
 
        var t;
@@ -168,11 +175,30 @@ public class KodikVideosService {
         }
         matcher.appendTail(encodedBase64);
 
-        String url = new String(Base64.decode(encodedBase64.toString(), Base64.NO_WRAP));
+        String url = decodeBase64(encodedBase64.toString());
         if (url.startsWith("//")) {
             url = url.replaceFirst("//", "https://");
         }
         url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
         return url;
+    }
+    
+    private String decodeBase64(String encodedBase64) {
+    	return new String(Base64.decode(encodedBase64, Base64.NO_WRAP));
+    }
+    
+    
+    private static String extractDomain(String url) {
+        int startIndex = url.indexOf("//");
+        if (startIndex != -1) {
+            startIndex += 2;
+        } else {
+            startIndex = 0;
+        }
+        int endIndex = url.indexOf('/', startIndex);
+        if (endIndex == -1) {
+            endIndex = url.length();
+        }
+        return url.substring(startIndex, endIndex);
     }
 }
