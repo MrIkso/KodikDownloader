@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">KodikDownloader</string>
+    <string name="put_id_hint">Введіть ваш %s id</string>
+    <string name="put_name_hint">Назва аніме</string>
+    <string name="search_reqest">Пошук</string>
+    <string name="season_hint">сезон %d</string>
+    <string name="episodes">Епізодів</string>
+    <string name="episode_hint">Епізод %d</string>
+    <string name="quality_choser_title">Виберіть якість відео</string>
+    <string name="found_hint">Знайдено %d результатів</string>
+    <string name="not_found_hint">Нічого не знайдено</string>
+    <string name="dvget_not_found">DVGet/ADM не встановлено</string>
+    <string name="idm_not_found">IDM не встановлено</string>
+    <string name="about">Про застосунок</string>
+    <string name="about_text">Цей застосунок призначений для завершення відео з сервісу Kodik\nВерсія: %s (%s)</string>
+    <string name="menu_downloder">Використовується завантажувач</string>
+    <string name="menu_downloder_adm">ADM</string>
+    <string name="menu_downloder_idm">IDM</string>
+    <string name="menu_downloder_browser">Браузер</string>
+    <string name="batch_download_avaliable_only_on_adm">Пакетне завантаження доступно лише в ADM</string>
+	 <string name="download_selected">Завантажити вибране</string>
+    
+    <string-array name="methods_array">
+        <item>Назва</item>
+        <item>Shikimori</item>
+        <item>Kinopoisk</item>
+        <item>IMdb</item>
+    </string-array>
+	
+    <plurals name="episode_hint">
+        <item quantity="one">%d епізод</item>
+        <item quantity="two">%d епізоди</item>
+        <item quantity="few">%d епізодів</item>
+        <item quantity="many">%d епізодів</item>
+		<item quantity="other">%d епізодів</item>
+    </plurals>
+</resources>
