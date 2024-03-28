@@ -69,7 +69,8 @@ public class MainFragment extends Fragment
     @Override
     public void onViewCreated(@Nullable View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
-
+        AppCompatActivity activity = (AppCompatActivity) requireActivity();
+        activity.setSupportActionBar(binding.toolbar);
         intitPreferences();
         initRecyclerView();
         initObserveValues();
@@ -122,8 +123,6 @@ public class MainFragment extends Fragment
             @Nullable Bundle savedInstanceState) {
         binding = FragmentMainBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(MainFragmentViewModel.class);
-        AppCompatActivity activity = (AppCompatActivity) requireActivity();
-        activity.setSupportActionBar(binding.toolbar);
         return binding.getRoot();
     }
 
@@ -208,8 +207,9 @@ public class MainFragment extends Fragment
                         result -> {
                             hideProgressDialog();
                             if (result != null && !result.isEmpty()) {
-                                 Log.i(TAG, "show bathDownload");
-                                showQualityChoserDialog(result.values().stream().findFirst().get(), result, true);
+                                Log.i(TAG, "show bathDownload");
+                                showQualityChoserDialog(
+                                        result.values().stream().findFirst().get(), result, true);
                             }
                         });
     }
@@ -244,7 +244,7 @@ public class MainFragment extends Fragment
             Map<Integer, Map<String, String>> allVideos,
             boolean isBatchDowload) {
         // Print the resulting map
-        videoMap.forEach((key, item) -> System.out.println("Key: " + key + ", Data: " + item));
+        // videoMap.forEach((key, item) -> System.out.println("Key: " + key + ", Data: " + item));
         String[] qualities = videoMap.keySet().toArray(new String[0]);
 
         AlertDialog dialog =
@@ -282,7 +282,7 @@ public class MainFragment extends Fragment
     }
 
     private void downloadVideo(String url) {
-        Log.d(TAG, url);
+        // Log.d(TAG, url);
 
         StringBuilder fileName = new StringBuilder(searchItem.getTitle());
         if (searchItem.getIsSerial()) {

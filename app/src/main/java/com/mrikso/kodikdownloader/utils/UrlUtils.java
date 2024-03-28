@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UrlUtils {
+    
     public static String getImdbIdFromUrl(String url) {
         // IMDb URL pattern
         Pattern pattern = Pattern.compile("(?:http|https)://(?:www\\.)?imdb\\.com/title/(\\w+)/?");

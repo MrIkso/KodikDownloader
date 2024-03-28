@@ -2,6 +2,9 @@ package com.mrikso.kodikdownloader.service;
 
 import android.util.Base64;
 
+import android.util.Log;
+import com.google.gson.Gson;
+import com.mrikso.kodikdownloader.model.KodikUrlParams;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -20,8 +23,11 @@ public class KodikVideosService {
 
     private final String URL_PATTERN = "\"([0-9]+)p?\":\\[\\{\"src\":\"([^\"]+)";
     private final String PLAYER_JS_PATTERN = "src=\"/(assets/js/app\\.player_[^\"]+\\.js)\"";
+    private Gson gson;
 
-    public KodikVideosService() {}
+    public KodikVideosService() {
+        gson = new Gson();
+    }
 
     private static KodikVideosService kodikVideosService;
 
@@ -36,39 +42,49 @@ public class KodikVideosService {
     public String getVideos(String baseUrl) throws IOException {
         // thanks by immisterio
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
-
+       // Log.i("tag", baseUrl);
         String ifRame = loadPage("https:" + baseUrl);
+        String urlParamsJson = getMatcherResult("var urlParams = \'([^\']*)\'", ifRame, 1);
+
+        KodikUrlParams params = gson.fromJson(urlParamsJson, KodikUrlParams.class);
+
         String domain = getMatcherResult("domain = \"([^\"]+)\"", ifRame, 1);
-        String d_sign = getMatcherResult("d_sign = \"([^\"]+)\"", ifRame, 1);
-        String pd = getMatcherResult("pd = \"([^\"]+)\"", ifRame, 1);
-        String pd_sign = getMatcherResult("pd_sign = \"([^\"]+)\"", ifRame, 1);
-        String ref = getMatcherResult("ref = \"([^\"]+)\"", ifRame, 1);
-        String ref_sign = getMatcherResult("ref_sign = \"([^\"]+)\"", ifRame, 1);
+
+        // String d_sign = getMatcherResult("d_sign = \"([^\"]+)\"", ifRame, 1);
+        //  String pd = getMatcherResult("pd = \"([^\"]+)\"", ifRame, 1);
+        //  String pd_sign = getMatcherResult("pd_sign = \"([^\"]+)\"", ifRame, 1);
+        // String ref = getMatcherResult("ref = \"([^\"]+)\"", ifRame, 1);
+        // String ref_sign = getMatcherResult("ref_sign = \"([^\"]+)\"", ifRame, 1);
         String type = getMatcherResult("videoInfo.type = '([^']+)'", ifRame, 1);
         String hash = getMatcherResult("videoInfo.hash = '([^']+)'", ifRame, 1);
         String id = getMatcherResult("videoInfo.id = '([^']+)'", ifRame, 1);
 
         String playerJsUrl = getMatcherResult(PLAYER_JS_PATTERN, ifRame, 1);
         if (!playerJsUrl.isEmpty()) {
-            String playerJs = loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
-            //Log.i("tag", playerJs);
-            String decodedUrl = decodeBase64(getMatcherResult("type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
-            String url = String.format("https://%s%s", domain, decodedUrl);
-            //Log.i("tag", url);
+            String playerJs =
+                    loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
+           // Log.i("tag", playerJs);
+            String decodedUrl =
+                    decodeBase64(
+                            getMatcherResult(
+                                    "type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
+            String url = String.format("https://%s%s", extractDomain(baseUrl), decodedUrl);
+          //  Log.i("tag", url);
             RequestBody formBody =
                     new FormBody.Builder()
-                            .add("d", domain)
-                            .add("d_sign", d_sign)
-                            .add("pd", pd)
-                            .add("pd_sign", pd_sign)
-                            .add("ref", "")
+                            .add("d", params.getD())
+                            .add("d_sign", params.getDSign())
+                            .add("pd", params.getPd())
+                            .add("pd_sign", params.getPdSign())
+                            .add("ref", params.getRef())
+                            .add("ref_sign", params.getRefSign())
                             .add("bad_user", "false")
+                            .add("cdn_is_working", "true")
                             .add("type", type)
                             .add("hash", hash)
                             .add("id", id)
+                            .add("info", "{}")
                             .build();
-
-            // Log.i("tag", url);
             return loadPage(url, formBody);
         }
         return null;
@@ -82,7 +98,7 @@ public class KodikVideosService {
             Pattern pat = Pattern.compile(URL_PATTERN);
             Matcher mat = pat.matcher(json);
             while (mat.find()) {
-                //Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
+                // Log.i("tag", mat.group(1) + " =>" + decodeUrl(mat.group(2)));
                 videoLinksMap.put(mat.group(1), decodeUrl(mat.group(2)));
             }
 
@@ -182,12 +198,11 @@ public class KodikVideosService {
         url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
         return url;
     }
-    
+
     private String decodeBase64(String encodedBase64) {
-    	return new String(Base64.decode(encodedBase64, Base64.NO_WRAP));
+        return new String(Base64.decode(encodedBase64, Base64.NO_WRAP));
     }
-    
-    
+
     private static String extractDomain(String url) {
         int startIndex = url.indexOf("//");
         if (startIndex != -1) {
