@@ -48,7 +48,7 @@ public class KodikVideosService {
 
         KodikUrlParams params = gson.fromJson(urlParamsJson, KodikUrlParams.class);
 
-        String domain = getMatcherResult("domain = \"([^\"]+)\"", ifRame, 1);
+        //String domain = getMatcherResult("domain = \"([^\"]+)\"", ifRame, 1);
 
         // String d_sign = getMatcherResult("d_sign = \"([^\"]+)\"", ifRame, 1);
         //  String pd = getMatcherResult("pd = \"([^\"]+)\"", ifRame, 1);
