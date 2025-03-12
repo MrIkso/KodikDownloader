@@ -2,15 +2,8 @@ package com.mrikso.kodikdownloader.service;
 
 import android.util.Base64;
 
-import android.util.Log;
 import com.google.gson.Gson;
 import com.mrikso.kodikdownloader.model.KodikUrlParams;
-import okhttp3.Call;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,6 +11,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class KodikVideosService {
 
@@ -42,7 +42,7 @@ public class KodikVideosService {
     public String getVideos(String baseUrl) throws IOException {
         // thanks by immisterio
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
-       // Log.i("tag", baseUrl);
+        // Log.i("tag", baseUrl);
         String ifRame = loadPage("https:" + baseUrl);
         String urlParamsJson = getMatcherResult("var urlParams = \'([^\']*)\'", ifRame, 1);
 
@@ -63,13 +63,13 @@ public class KodikVideosService {
         if (!playerJsUrl.isEmpty()) {
             String playerJs =
                     loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
-           // Log.i("tag", playerJs);
+            // Log.i("tag", playerJs);
             String decodedUrl =
                     decodeBase64(
                             getMatcherResult(
                                     "type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
             String url = String.format("https://%s%s", extractDomain(baseUrl), decodedUrl);
-          //  Log.i("tag", url);
+            //  Log.i("tag", url);
             RequestBody formBody =
                     new FormBody.Builder()
                             .add("d", params.getD())
@@ -176,27 +176,38 @@ public class KodikVideosService {
        	*/
 
     private String decodeUrl(String encoded) {
-        Pattern pattern = Pattern.compile("[A-Za-z]");
-        StringBuffer encodedBase64 = new StringBuffer();
-        Matcher matcher = pattern.matcher(encoded);
-        while (matcher.find()) {
-            char m = matcher.group().charAt(0);
-            int temp = (int) m + 13;
-            String rep =
-                    Character.toString(
-                            ((Character.compare(m, 'Z') <= 0 ? 90 : 122) >= temp)
-                                    ? (char) temp
-                                    : (char) (temp - 26));
-            matcher.appendReplacement(encodedBase64, rep);
+        String url;
+        if (!encoded.contains("manifest.m3u8")) {
+            String base64 = rot13(encoded);
+            url = decodeUrlBase64(base64);
+        } else {
+            url = encoded;
         }
-        matcher.appendTail(encodedBase64);
-
-        String url = decodeBase64(encodedBase64.toString());
         if (url.startsWith("//")) {
             url = url.replaceFirst("//", "https://");
         }
         url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
         return url;
+    }
+
+    private String rot13(String input) {
+        StringBuilder result = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isLetter(c)) {
+                char base = Character.isUpperCase(c) ? 'A' : 'a';
+                result.append((char) (base + (c - base + 13) % 26));
+            } else {
+                result.append(c);
+            }
+        }
+        return result.toString();
+    }
+
+    public static String decodeUrlBase64(String encodedBase64) {
+        encodedBase64 = encodedBase64.replace('-', '+').replace('_', '/');
+        int padding = (4 - encodedBase64.length() % 4) % 4;
+        encodedBase64 += "=".repeat(padding);
+        return new String(Base64.decode(encodedBase64, Base64.NO_WRAP));
     }
 
     private String decodeBase64(String encodedBase64) {
