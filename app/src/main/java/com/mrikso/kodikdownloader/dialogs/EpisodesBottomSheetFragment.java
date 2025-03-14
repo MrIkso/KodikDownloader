@@ -34,7 +34,7 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
 
     public static EpisodesBottomSheetFragment newInstance(List<EpisodeItem> items) {
         Bundle args = new Bundle();
-        args.putSerializable(KEY_ITEMS, new ArrayList<>(items));
+        args.putParcelableArrayList(KEY_ITEMS, new ArrayList<>(items));
         EpisodesBottomSheetFragment fragment = new EpisodesBottomSheetFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,8 +67,8 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         binding.recyclerView.setAdapter(adapter);
 
         if (getArguments() != null) {
-            ArrayList<EpisodeItem> listEpisodes = (ArrayList<EpisodeItem>) getArguments().getSerializable(KEY_ITEMS);
-            adapter.submitList(listEpisodes);
+            List<EpisodeItem> episodeItems = getArguments().getParcelableArrayList(KEY_ITEMS);
+            adapter.submitList(episodeItems);
         }
         binding.downloadSelected.setOnClickListener(v-> listener.onDownloadMultiSelected(adapter.getSelected()));
     }
