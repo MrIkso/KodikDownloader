@@ -212,9 +212,11 @@ public class SearchResultModel {
             @SerializedName("link")
             private String link;
 
+            @SerializedName("title")
+            private String title;
+
             @SerializedName("episodes")
             private Map<Integer, String> episodes;
-
 
             public String getLink() {
                 return link;
@@ -222,6 +224,10 @@ public class SearchResultModel {
 
             public Map<Integer, String> getEpisodes() {
                 return episodes;
+            }
+
+            public String getTitle() {
+                return title;
             }
         }
     }

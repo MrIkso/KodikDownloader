@@ -1,5 +1,6 @@
 package com.mrikso.kodikdownloader.model;
 
+import java.util.List;
 import java.util.Map;
 
 public class SearchItem {
@@ -7,7 +8,7 @@ public class SearchItem {
     private String title;
     private int season;
     private String url;
-    private Map<Integer, String> episodes;
+    private List<EpisodeItem> episodes;
 
     public SearchItem(String title, String url) {
         this.title = title;
@@ -30,11 +31,11 @@ public class SearchItem {
         this.title = title;
     }
 
-    public Map<Integer, String> getEpisodes() {
+    public List<EpisodeItem> getEpisodes() {
         return this.episodes;
     }
 
-    public void setEpisodes(Map<Integer, String> episodes) {
+    public void setEpisodes(List<EpisodeItem> episodes) {
         this.episodes = episodes;
     }
 

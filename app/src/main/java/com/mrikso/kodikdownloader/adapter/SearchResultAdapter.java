@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mrikso.kodikdownloader.R;
 import com.mrikso.kodikdownloader.databinding.ListSearchItemBinding;
+import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchItem;
 import com.mrikso.kodikdownloader.model.SearchResultModel;
 
@@ -84,10 +85,16 @@ public class SearchResultAdapter
                 searchItem.setIsSerial(true);
 				
 				Map<Integer, SearchResultModel.Results.Season> seasonsMap = result.getSeasons();
-				Map<Integer, String> episodesMap = new HashMap<>();
+				List<EpisodeItem> episodesMap = new ArrayList<>();
 				
 				for (Map.Entry<Integer, SearchResultModel.Results.Season> seasons : seasonsMap.entrySet()){
-					seasons.getValue().getEpisodes().forEach(episodesMap::putIfAbsent);
+                    SearchResultModel.Results.Season seasonModel = seasons.getValue();
+                    for (Map.Entry<Integer, String> episodeEntry : seasonModel.getEpisodes().entrySet()) {
+                        EpisodeItem episodeItem = new EpisodeItem(seasons.getKey(), seasonModel.getTitle());
+                        episodeItem.setEpisode(episodeEntry.getKey());
+                        episodeItem.setEpisodeUrl(episodeEntry.getValue());
+                        episodesMap.add(episodeItem);
+                    }
 				}
 				
                 searchItem.setEpisodes(episodesMap);

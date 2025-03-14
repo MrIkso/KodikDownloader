@@ -32,9 +32,9 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         void onDownloadMultiSelected(List<EpisodeItem> items);
     }
 
-    public static EpisodesBottomSheetFragment newInstance(Map<Integer, String> items) {
+    public static EpisodesBottomSheetFragment newInstance(List<EpisodeItem> items) {
         Bundle args = new Bundle();
-        args.putSerializable(KEY_ITEMS, new HashMap<>(items));
+        args.putSerializable(KEY_ITEMS, new ArrayList<>(items));
         EpisodesBottomSheetFragment fragment = new EpisodesBottomSheetFragment();
         fragment.setArguments(args);
         return fragment;
@@ -67,16 +67,8 @@ public class EpisodesBottomSheetFragment extends BottomSheetDialogFragment
         binding.recyclerView.setAdapter(adapter);
 
         if (getArguments() != null) {
-            final Map<Integer, String> stringArrayList =
-                    (Map<Integer, String>) getArguments().getSerializable(KEY_ITEMS);
-
-            List<EpisodeItem> listEpisodes = new ArrayList<>();
-            for (Map.Entry<Integer, String> ep : stringArrayList.entrySet()) {
-                // Log.i(TAG, ep.getKey() + " " + ep.getValue());
-                listEpisodes.add(new EpisodeItem(ep.getKey(), ep.getValue()));
-            }
-
-            adapter.setResults(listEpisodes);
+            ArrayList<EpisodeItem> listEpisodes = (ArrayList<EpisodeItem>) getArguments().getSerializable(KEY_ITEMS);
+            adapter.submitList(listEpisodes);
         }
         binding.downloadSelected.setOnClickListener(v-> listener.onDownloadMultiSelected(adapter.getSelected()));
     }

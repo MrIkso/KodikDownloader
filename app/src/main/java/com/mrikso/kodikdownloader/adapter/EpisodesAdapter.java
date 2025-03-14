@@ -1,10 +1,13 @@
 package com.mrikso.kodikdownloader.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mrikso.kodikdownloader.databinding.ListEpisodeItemBinding;
@@ -14,39 +17,30 @@ import com.mrikso.kodikdownloader.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHolder> {
-    private List<EpisodeItem> results = new ArrayList<>();
+public class EpisodesAdapter extends ListAdapter<EpisodeItem, EpisodesAdapter.ViewHolder> {
     private OnItemClickListener listener;
-    private ListEpisodeItemBinding binding;
-
     private int checkedPosition = -1;
 
-    public void setResults(List<EpisodeItem> results) {
-        this.results = results;
-        notifyDataSetChanged();
+    public EpisodesAdapter() {
+        super(new EpisodeItemDiffCallback());
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        binding = ListEpisodeItemBinding.inflate(inflater, parent, false);
+        ListEpisodeItemBinding binding = ListEpisodeItemBinding.inflate(inflater, parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        EpisodeItem episode = results.get(position);
+        EpisodeItem episode = getItem(position);
         holder.bind(episode, position);
     }
 
-    @Override
-    public int getItemCount() {
-        return results.size();
-    }
-
     protected class ViewHolder extends RecyclerView.ViewHolder {
-        private ListEpisodeItemBinding binding;
+        private final ListEpisodeItemBinding binding;
 
         public ViewHolder(@NonNull ListEpisodeItemBinding binding) {
             super(binding.getRoot());
@@ -60,6 +54,9 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
                             .getContext()
                             .getString(R.string.episode_hint, episode.getEpisode());
 
+            if(!TextUtils.isEmpty(episode.getTitle())){
+                title = String.format("%s %s", episode.getTitle(), title);
+            }
             binding.name.setText(title);
 
             binding.checkedView.setVisibility(episode.isChecked() ? View.VISIBLE : View.GONE);
@@ -103,9 +100,9 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.ViewHo
 
     public List<EpisodeItem> getSelected() {
         ArrayList<EpisodeItem> selected = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
-            if (results.get(i).isChecked()) {
-                selected.add(results.get(i));
+        for (int i = 0; i < getItemCount(); i++) {
+            if (getItem(i).isChecked()) {
+                selected.add(getItem(i));
             }
         }
         return selected;

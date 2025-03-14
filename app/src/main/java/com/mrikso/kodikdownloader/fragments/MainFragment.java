@@ -275,7 +275,7 @@ public class MainFragment extends Fragment
         dialog.show();
     }
 
-    private void showEpidodeChoserDialog(Map<Integer, String> episodes) {
+    private void showEpidodeChoserDialog(List<EpisodeItem> episodes) {
         EpisodesBottomSheetFragment dialog = EpisodesBottomSheetFragment.newInstance(episodes);
         dialog.setOnItemClickListener(this);
         dialog.show(getParentFragmentManager(), EpisodesBottomSheetFragment.TAG);
@@ -286,7 +286,12 @@ public class MainFragment extends Fragment
 
         StringBuilder fileName = new StringBuilder(searchItem.getTitle());
         if (searchItem.getIsSerial()) {
-            fileName.append(" — " + getString(R.string.episode_hint, episodeItem.getEpisode()));
+            String episodeName = getString(R.string.episode_hint, episodeItem.getEpisode());
+            String seasonTitle = searchItem.getTitle();
+            if(!TextUtils.isEmpty(seasonTitle)){
+                episodeName = String.format("%s %s",seasonTitle, episodeName);
+            }
+            fileName.append(String.format(" —  %s", episodeName));
         }
         fileName.append(".mp4");
         // Log.d(TAG, fileName.toString());
