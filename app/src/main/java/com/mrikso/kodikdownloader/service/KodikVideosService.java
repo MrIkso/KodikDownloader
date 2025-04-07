@@ -195,7 +195,7 @@ public class KodikVideosService {
         for (char c : input.toCharArray()) {
             if (Character.isLetter(c)) {
                 char base = Character.isUpperCase(c) ? 'A' : 'a';
-                result.append((char) (base + (c - base + 13) % 26));
+                result.append((char) (base + (c - base + 18) % 26));
             } else {
                 result.append(c);
             }
