@@ -7,9 +7,9 @@ android {
     defaultConfig {
         applicationId "com.mrikso.kodikdownloader"
         minSdk 21
-        targetSdk 33
-        versionCode 8
-        versionName "1.8"
+        targetSdk 35
+        versionCode 9
+        versionName "1.9"
 		archivesBaseName = "KodikDownloader-$versionName($versionCode)"
     }
 
@@ -26,18 +26,18 @@ android {
     }
     
     compileOptions {
-		sourceCompatibility JavaVersion.VERSION_11
-		targetCompatibility JavaVersion.VERSION_11
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
 	}
 	
 	buildFeatures {
         viewBinding true
         buildConfig true
     }
-	
-	lintOptions {
-		abortOnError false
-	}
+    lint {
+        abortOnError false
+    }
+
 }
 
 dependencies {
