@@ -1,7 +1,7 @@
 package com.mrikso.kodikdownloader.service;
 
 import android.util.Base64;
-
+import android.util.Log;
 import com.google.gson.Gson;
 import com.mrikso.kodikdownloader.model.KodikUrlParams;
 
@@ -44,6 +44,7 @@ public class KodikVideosService {
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
         // Log.i("tag", baseUrl);
         String ifRame = loadPage("https:" + baseUrl);
+        // Log.i("tag", baseUrl);
         String urlParamsJson = getMatcherResult("var urlParams = \'([^\']*)\'", ifRame, 1);
 
         KodikUrlParams params = gson.fromJson(urlParamsJson, KodikUrlParams.class);
@@ -55,21 +56,17 @@ public class KodikVideosService {
         //  String pd_sign = getMatcherResult("pd_sign = \"([^\"]+)\"", ifRame, 1);
         // String ref = getMatcherResult("ref = \"([^\"]+)\"", ifRame, 1);
         // String ref_sign = getMatcherResult("ref_sign = \"([^\"]+)\"", ifRame, 1);
-        String type = getMatcherResult("videoInfo.type = '([^']+)'", ifRame, 1);
-        String hash = getMatcherResult("videoInfo.hash = '([^']+)'", ifRame, 1);
-        String id = getMatcherResult("videoInfo.id = '([^']+)'", ifRame, 1);
-
+        String type = getMatcherResult("vInfo.type = '([^']+)'", ifRame, 1);
+        String hash = getMatcherResult("vInfo.hash = '([^']+)'", ifRame, 1);
+        String id = getMatcherResult("vInfo.id = '([^']+)'", ifRame, 1);
+        // Log.i("params", " " + type + " " + hash + " " + id );
         String playerJsUrl = getMatcherResult(PLAYER_JS_PATTERN, ifRame, 1);
         if (!playerJsUrl.isEmpty()) {
-            String playerJs =
-                    loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
-            // Log.i("tag", playerJs);
-            String decodedUrl =
-                    decodeBase64(
-                            getMatcherResult(
-                                    "type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
+            String playerJs = loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
+            Log.i("tag", playerJs);
+            String decodedUrl =decodeBase64(getMatcherResult("type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
             String url = String.format("https://%s%s", extractDomain(baseUrl), decodedUrl);
-            //  Log.i("tag", url);
+            Log.i("tag", url);
             RequestBody formBody =
                     new FormBody.Builder()
                             .add("d", params.getD())
