@@ -23,7 +23,7 @@ public class ApiClient {
 
         kodikService =
                 new Retrofit.Builder()
-                        .baseUrl("https://kodikapi.com")
+                        .baseUrl("https://kodik-api.com")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build()
                         .create(KodikService.class);

@@ -43,7 +43,7 @@ public class KodikVideosService {
         // thanks by immisterio
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
         // Log.i("tag", baseUrl);
-        String ifRame = loadPage("https:" + baseUrl);
+        String ifRame = loadPage(baseUrl);
         // Log.i("tag", baseUrl);
         String urlParamsJson = getMatcherResult("var urlParams = \'([^\']*)\'", ifRame, 1);
 
