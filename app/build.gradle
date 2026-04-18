@@ -8,8 +8,8 @@ android {
         applicationId "com.mrikso.kodikdownloader"
         minSdk 21
         targetSdk 35
-        versionCode 11
-        versionName "2.1"
+        versionCode 12
+        versionName "2.2"
 		archivesBaseName = "KodikDownloader-$versionName($versionCode)"
     }
 
