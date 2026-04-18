@@ -9,10 +9,11 @@
         android:title="@string/menu_downloder">
         <menu>
             <group android:checkableBehavior="single">
+            <!--
                 <item
                     android:id="@+id/menu_downloder_adm"
                     android:title="@string/menu_downloder_adm"
-                     />
+                     />-->
                 <item
                     android:id="@+id/menu_downloder_idm"
                     android:title="@string/menu_downloder_idm"

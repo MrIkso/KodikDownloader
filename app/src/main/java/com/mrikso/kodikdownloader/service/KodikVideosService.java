@@ -43,6 +43,9 @@ public class KodikVideosService {
         // thanks by immisterio
         // https://github.com/immisterio/Lampac/blob/51c10020f6c96de96d1501c7904ed40d3a99c697/Online/Controllers/Kodik.cs#L132
         // Log.i("tag", baseUrl);
+        if (baseUrl.startsWith("//")) {
+            baseUrl = "https:" + baseUrl;
+        }
         String ifRame = loadPage(baseUrl);
         // Log.i("tag", baseUrl);
         String urlParamsJson = getMatcherResult("var urlParams = \'([^\']*)\'", ifRame, 1);
@@ -63,10 +66,10 @@ public class KodikVideosService {
         String playerJsUrl = getMatcherResult(PLAYER_JS_PATTERN, ifRame, 1);
         if (!playerJsUrl.isEmpty()) {
             String playerJs = loadPage(String.format("https://%s/%s", extractDomain(baseUrl), playerJsUrl));
-            Log.i("tag", playerJs);
+            // Log.i("tag", playerJs);
             String decodedUrl =decodeBase64(getMatcherResult("type:\"POST\",url:atob\\(\"([^\"]+)\"\\)", playerJs, 1));
             String url = String.format("https://%s%s", extractDomain(baseUrl), decodedUrl);
-            Log.i("tag", url);
+            // Log.i("tag", url);
             RequestBody formBody =
                     new FormBody.Builder()
                             .add("d", params.getD())
@@ -183,7 +186,7 @@ public class KodikVideosService {
         if (url.startsWith("//")) {
             url = url.replaceFirst("//", "https://");
         }
-        url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
+        // url = url.replace(":hls:manifest.m3u8", "").replace(":hls:hls.m3u8", "");
         return url;
     }
 

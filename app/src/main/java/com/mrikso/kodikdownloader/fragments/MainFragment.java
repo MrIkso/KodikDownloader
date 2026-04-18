@@ -308,9 +308,11 @@ public class MainFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_options, menu);
         switch (downloaderMode) {
+            /*
             case ADM:
                 menu.findItem(R.id.menu_downloder_adm).setChecked(true);
                 break;
+                */
             case IDM:
                 menu.findItem(R.id.menu_downloder_idm).setChecked(true);
                 break;
@@ -322,12 +324,14 @@ public class MainFragment extends Fragment
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        /*
         if (item.getItemId() == R.id.menu_downloder_adm) {
             item.setChecked(!item.isChecked());
             downloaderMode = DownloaderMode.ADM;
             savePreferences();
             return true;
         }
+        */
         if (item.getItemId() == R.id.menu_downloder_idm) {
             item.setChecked(!item.isChecked());
             downloaderMode = DownloaderMode.IDM;
