@@ -17,7 +17,7 @@
     <string name="menu_downloder_adm">ADM</string>
     <string name="menu_downloder_idm">IDM</string>
     <string name="menu_downloder_browser">Browser</string>
-    <string name="batch_download_avaliable_only_on_adm">Batch download mode available only on ADM</string>
+    <string name="batch_download_avaliable_only_on_idm">Batch download mode available only on IDM</string>
 	 <string name="download_selected">Download Selected</string>
     
     <string-array name="methods_array">

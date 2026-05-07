@@ -39,9 +39,11 @@ import com.mrikso.kodikdownloader.downloader.DownloadFile;
 import com.mrikso.kodikdownloader.downloader.DownloaderMode;
 import com.mrikso.kodikdownloader.model.EpisodeItem;
 import com.mrikso.kodikdownloader.model.SearchItem;
+import com.mrikso.kodikdownloader.utils.IDMUtil;
 import com.mrikso.kodikdownloader.utils.KeyboardUtils;
 import com.mrikso.kodikdownloader.viewmodel.MainFragmentViewModel;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -277,7 +279,7 @@ public class MainFragment extends Fragment
                                 (d, index) -> {
                                     String selectedQuality = qualities[index];
                                     //  Log.i(TAG, "selection.q: " + selectedQuality);
-                                    downloadVideosBatch(episodesVideo, selectedQuality);
+                                    downloadVideosBatchIDM(episodesVideo, selectedQuality);
                                     d.dismiss();
                                 })
                         .create();
@@ -394,18 +396,18 @@ public class MainFragment extends Fragment
 
     @Override
     public void onBatchDownloadItemClicked(SearchItem searchItem) {
-        if (downloaderMode == DownloaderMode.ADM) {
+        if (downloaderMode == DownloaderMode.IDM) {
             this.searchItem = searchItem;
             showProgressDialog();
 
             viewModel.loadVideos(searchItem.getEpisodes());
         } else {
-            Toast.makeText(requireContext(), R.string.batch_download_avaliable_only_on_adm,
+            Toast.makeText(requireContext(), R.string.batch_download_avaliable_only_on_idm,
                     Toast.LENGTH_LONG).show();
         }
     }
 
-    private void downloadVideosBatch(
+    private void downloadVideosBatchADM(
             Map<EpisodeItem, Map<String, String>> allVideos, String selectedQuality) {
         StringBuilder videos = new StringBuilder();
         for (Map.Entry<EpisodeItem, Map<String, String>> episodeVideos : allVideos.entrySet()) {
@@ -426,6 +428,22 @@ public class MainFragment extends Fragment
         // Log.d(TAG, videos.toString());
         DownloadFile.download(requireContext(), DownloaderMode.ADM, videos.toString(), null, true);
     }
+    
+    private void downloadVideosBatchIDM(
+            Map<EpisodeItem, Map<String, String>> allVideos, String selectedQuality) {
+        Map<String, String> urlAndFileNames = new HashMap<>();
+        for (Map.Entry<EpisodeItem, Map<String, String>> episodeVideos : allVideos.entrySet()) {
+            EpisodeItem episodeNum = episodeVideos.getKey();
+            Map<String, String> episodeVideoMap = episodeVideos.getValue();
+            // Log.i(TAG, "GENERATING INFO..");
+            String url = episodeVideoMap.get(selectedQuality);
+            String fileName = generateEpisodeFileName(episodeNum);
+            urlAndFileNames.put(url, fileName);
+        }
+        // Log.d(TAG, videos.toString());
+        IDMUtil.downloadFiles(requireActivity(), urlAndFileNames, true, true);
+    }
+    
 
     @Override
     public void onDownloadMultiSelected(List<EpisodeItem> items) {
